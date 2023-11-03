@@ -15,12 +15,16 @@ def main():
         dinero = float(secondAnswer.get('dinero'))  # type: ignore
         x = int(secondAnswer.get('X'))  # type: ignore
         y = int(secondAnswer.get('Y'))  # type: ignore
-        while dinero < 0 or x < 1 or y < 1:
-            os.system('cls')
+        while dinero < 50 or x < 2 or y < 2:
+            Logger.printError(
+                "El dinero debe ser mayor o igual a 50 y el ancho y largo del tablero debe ser como minimo 2x2")
             secondAnswer = inquirer.prompt(gameQuestions)
             dinero = float(secondAnswer.get('dinero'))  # type: ignore
             x = int(secondAnswer.get('X'))  # type: ignore
             y = int(secondAnswer.get('Y'))  # type: ignore
+        os.system('cls')
+        Logger.printSuccess(
+            f"Su partida quedo configurada con un monto de dinero de ${dinero} y un tablero de tamaño {x}x{y}")
         tablero = Tablero(x, y, dinero)
     elif firstAnswer is not None and firstAnswer['innit'] == 'Importar':
         importar = True

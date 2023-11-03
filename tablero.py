@@ -103,18 +103,22 @@ class Tablero:
 
     def destruir(self, x: int, y: int):
         pudoDestruir = False
-        if self.__tablero[x][y].getConstruccion() is not None:
-            if self.__dinero - self.__tablero[x][y].getConstruccion().getPrecio() / 2 < 0:
-                Logger.printWarning(
-                    "No tiene dinero suficiente para destruir!!")
+        try:
+            if self.__tablero[x][y].getConstruccion() is not None:
+                if self.__dinero - self.__tablero[x][y].getConstruccion().getPrecio() / 2 < 0:
+                    Logger.printWarning(
+                        "No tiene dinero suficiente para destruir!!")
+                else:
+                    self.__dinero -= self.__tablero[x][y].getConstruccion(
+                    ).getPrecio() / 2
+                    self.__tablero[x][y].setConstruccion(None)
+                    pudoDestruir = True
+                    Logger.printSuccess("Le quedan $" + str(self.__dinero))
             else:
-                self.__dinero -= self.__tablero[x][y].getConstruccion(
-                ).getPrecio() / 2
-                self.__tablero[x][y].setConstruccion(None)
-                pudoDestruir = True
-                Logger.printSuccess("Le quedan $" + str(self.__dinero))
-        else:
-            Logger.printWarning("No hay una construccion en esta casilla")
+                Logger.printWarning("No hay una construccion en esta casilla")
+        except IndexError:
+            Logger.printError(
+                f'La posicion [{x}][{y}] esta fuera del rango del tablero. El tablero va de [0][0] a [{self.__y-1}][{self.__x-1}]')
         self.__mostrarTablero()
         return pudoDestruir
 
@@ -133,7 +137,7 @@ class Tablero:
                 return tablero
         except FileNotFoundError:
             Logger.printError(
-                'IMPORTAR- No se encontro un archivo con ese nombre')
+                'IMPORTAR - No se encontro un archivo con ese nombre')
 
 
 class CarJSONEncoder(json.JSONEncoder):
