@@ -15,9 +15,6 @@ class Celda:
     def setConstruccion(self, construccion):
         self.__construccion = construccion
 
-    def getPos(self):
-        return self.__posX, self.__posY
-
 
 class Tablero:
     def __init__(self, x: int, y: int, dinero: float, tablero=None):
@@ -28,13 +25,10 @@ class Tablero:
             self.__tablero = self.__crearTablero(x, y)
         else:
             self.__tablero = self.__crearTableroImportado(tablero)
-        self.__printBoard()
+        self.__mostrarTablero()
 
     def getDinero(self):
         return self.__dinero
-
-    def getTablero(self):
-        return self.__tablero
 
     def __crearTablero(self, x: int, y: int):
         arr = []
@@ -47,7 +41,6 @@ class Tablero:
 
     def __crearTableroImportado(self, tablero):
         for i in range(len(tablero)):
-            col = []
             for j in range(len(tablero[i])):
                 celda = tablero[i][j].get('_Celda__construccion')
                 if celda is None:
@@ -70,7 +63,7 @@ class Tablero:
                     tablero[i][j] = celdaConstruct
         return tablero
 
-    def __printBoard(self):
+    def __mostrarTablero(self):
         board = ''
         for i in range(len(self.__tablero)):
             for j in range(len(self.__tablero[i])):
@@ -105,7 +98,7 @@ class Tablero:
         except IndexError:
             Logger.printError(
                 f'La posicion [{x}][{y}] esta fuera del rango del tablero. El tablero va de [0][0] a [{self.__y-1}][{self.__x-1}]')
-        self.__printBoard()
+        self.__mostrarTablero()
         return pudoConstruir
 
     def destruir(self, x: int, y: int):
@@ -120,7 +113,9 @@ class Tablero:
                 self.__tablero[x][y].setConstruccion(None)
                 pudoDestruir = True
                 Logger.printSuccess("Le quedan $" + str(self.__dinero))
-        self.__printBoard()
+        else:
+            Logger.printWarning("No hay una construccion en esta casilla")
+        self.__mostrarTablero()
         return pudoDestruir
 
     def guardar(self, fileName: str):
